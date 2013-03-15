@@ -1,0 +1,40 @@
+shaft_len = 22
+shaft_radius = 2.5
+motorBody_len = 47.5
+
+motorBody_width = 42
+motorRing_radius = 11
+motorRing_height = 2
+
+mountingholes_fromcent = 15.5
+mountingholes_radius = 1.5
+mountingholes_depth = 4.5
+
+motorBody = new Cube
+  size: [motorBody_width, motorBody_width, motorBody_len]
+  center: [0, 0, motorBody_len / 2]
+  
+ring = new Cylinder
+  h: motorRing_height
+  r: motorRing_radius
+  center: [0, 0, motorBody_len]
+
+shaft = new Cylinder
+  h: shaft_len
+  r: shaft_radius
+  center: [0, 0, motorBody_len + motorRing_radius]
+
+mountingholes = new Cylinder
+  h: mountingholes_depth
+  r: mountingholes_radius
+  center: [0, 0, motorBody_len - (mountingholes_depth / 2) ]
+  
+motor = motorBody.union([ring, shaft])
+
+motor = motor.subtract(mountingholes.translate [mountingholes_fromcent, mountingholes_fromcent, 0] )
+motor = motor.subtract(mountingholes.translate [-mountingholes_fromcent, mountingholes_fromcent, 0] )
+motor = motor.subtract(mountingholes.translate [mountingholes_fromcent, -mountingholes_fromcent, 0] )
+motor = motor.subtract(mountingholes.translate [-mountingholes_fromcent, -mountingholes_fromcent, 0] )
+
+
+return motor
