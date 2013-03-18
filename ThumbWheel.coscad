@@ -29,7 +29,7 @@ hex = new Cylinder
   h: centerhex_height
   r: centerhex_radus  
   center: [0, 0, centerhub_height - centerhex_height / 2]
-  $fn: 6
+  $fn: 6 # This sets the number of sides to six.
   
 nuttrap = new Cylinder
   h: centerhub_height
