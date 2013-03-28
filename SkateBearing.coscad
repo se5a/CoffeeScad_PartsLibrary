@@ -1,0 +1,26 @@
+
+skateBearing = (innerR, outerR, rimwidth, hubwidth, hubR)->
+  sub_shaft = new Cylinder
+    r: innerR
+    h: rimwidth
+    center: true
+  hub = new Cylinder
+    r: hubR
+    h: hubwidth
+    center: true
+  rim = new Cylinder
+    r: outerR
+    h: rimwidth
+    center: true
+  sub_hub = new Cylinder
+    r: hubR
+    h: rimwidth
+    center: true
+  bearing = rim.subtract(sub_hub)
+  bearing = bearing.union(hub)
+  return bering = bearing.subtract(sub_shaft)
+
+Bearing608_hubloose = skateBearing(4, 11.5, 7.5, 6.5, 6)
+Bearing608_rimloose = skateBearing(4, 11, 6.5, 7.5, 7)
+  
+return skateBearing(4, 11, 7, 6, 7)

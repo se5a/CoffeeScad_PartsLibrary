@@ -1,0 +1,68 @@
+skateBearing = (innerR, outerR, rimwidth, hubwidth, hubR)->
+  sub_shaft = new Cylinder
+    r: innerR
+    h: rimwidth
+    center: true
+  hub = new Cylinder
+    r: hubR
+    h: hubwidth
+    center: true
+  rim = new Cylinder
+    r: outerR
+    h: rimwidth
+    center: true
+  sub_hub = new Cylinder
+    r: hubR
+    h: rimwidth
+    center: true
+  bearing = rim.subtract(sub_hub)
+  bearing = bearing.union(hub)
+  return bering = bearing.subtract(sub_shaft)
+
+#Bearing608_hubloose = skateBearing(4, 11.5, 6.5, 6.5, 6)
+Bearing608_rimloose = skateBearing(4, 11.5, 7.5, 7, 7)
+
+bearingshaft = new Cylinder
+  r: 4
+  h: 18
+  center: true
+
+bearing_sub = Bearing608_rimloose.union(bearingshaft)
+#bearing_sub = bearingshaft
+bearing_sub = bearing_sub.rotate [0, 90, 0]
+bearing_sub = bearing_sub.translate [0, 0, 15]
+  
+hingeshaft = new Cylinder
+  r: 1.5
+  h: 25
+  center: true
+hingeshaft = hingeshaft.rotate [0, 90, 0]
+hingeshaft = hingeshaft.translate  [0, -20, 20]
+  
+hinge_sub = new Cylinder
+  r: 6
+  h: 13
+  center: true
+hinge_sub = hinge_sub.rotate [0, 90, 0]
+hinge_sub = hinge_sub.translate  [0, -20, 20]
+hinge_sub = hinge_sub.union(hingeshaft)
+  
+base_block = new Cube
+  size: [25, 30, 20]
+  center: [0, 0, 10]
+  
+hinge_block = new Cylinder
+  r: 5
+  h: 25
+  center: true
+hinge_block = hinge_block.rotate [0, 90, 0]
+
+hinge_block = hinge_block.translate [0, -20, 20]
+
+idler = base_block.union(hinge_block) #hull this when hull availible
+
+idler = idler.subtract([hinge_sub, bearing_sub])
+
+return idler
+  
+#return Bearing608_hubloose

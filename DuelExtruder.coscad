@@ -1,0 +1,104 @@
+
+base_wid = 60
+base_len = 100
+base_Thickness = 7
+
+base_hotend_hex_height = 4 #4 + tolerance for M4
+base_hotend_hex_radius = 4 #4 + tolerance for M4
+base_hotend_shaft_radius = 2 # 2 + tolerance for M4
+
+
+motorMount_wallThickness = 6
+motorMount_wallWidth = 44
+motorMount_wallHeight = 44
+motorMount_distance = 31 #distance from center of shaft to center of fimiment on Y
+
+hBoltBerring_thickness = 7
+hBoltBerring_outerRadius = 11
+hBoltBerring_wallThickness = 10
+hBoltBerring_wallRThickness = 3 #thickness of material between berring and outer wall
+hBoltBerring_locZ = 45 #baseplate to center of hob bolt
+hBoltBerring_locY = 6.5 #distance between center of filiment and center of hob bolt
+
+
+base = new Cube
+  size: [base_wid, base_len, base_Thickness]
+  center: [0, 0, base_Thickness / 2]
+
+   
+motorMount = new Cube
+  size: [motorMount_wallThickness, motorMount_wallWidth, motorMount_wallHeight]
+  center: [base_wid / 2 - motorMount_wallThickness / 2, -(motorMount_distance / 2 + motorMount_wallWidth / 2), base_Thickness + motorMount_wallHeight / 2]
+
+motorMount_sub = new Cylinder
+  r: 11
+  h: motorMount_wallThickness
+
+motorMount_sub = motorMount_sub.rotate [0, 90, 0]
+motorMount_sub = motorMount_sub.translate [base_wid / 2, -(motorMount_distance / 2 + motorMount_wallWidth / 2), base_Thickness + motorMount_wallHeight / 2]
+  
+hBoltBerring_retention_height = hBoltBerring_locZ + hBoltBerring_outerRadius + hBoltBerring_wallRThickness
+hBoltBerring_retention_width = (hBoltBerring_outerRadius + hBoltBerring_wallRThickness) * 2
+
+hBoltBerring_retention1 = new Cube
+  size: [hBoltBerring_wallThickness, hBoltBerring_retention_width, hBoltBerring_retention_height]
+  center: [base_wid / 2 - hBoltBerring_wallThickness / 2, 0, base_Thickness + hBoltBerring_retention_height / 2]
+
+hBoltBerring_retention2 = hBoltBerring_retention1.rotate [0, 0, 180]
+
+hBoltberring1 = new Cylinder
+  r: hBoltBerring_outerRadius
+  h: hBoltBerring_thickness
+hBoltberring1 = hBoltberring1.rotate [0, 90, 0]
+hBoltberring1 = hBoltberring1.translate [base_wid / 2, 0, base_Thickness + hBoltBerring_locZ]
+
+hBoltberring2 = hBoltberring1.rotate [0, 0, 180]
+
+hBolt = new Cylinder
+  r: 4
+  h: 100
+hBolt = hBolt.rotate [0, 90, 0]
+hBolt = hBolt.translate [50, 0, hBoltBerring_locZ + base_Thickness]
+hBolt = hBolt.color [0.85, 0.65, 0.125]
+  
+filiment = new Cylinder
+  r: 2 #is 4mm diameter too much room for 3mm filiment?
+  h: 100
+  center: [0, 0, 50]
+
+filiment1 = filiment.translate [15, 0, 0]
+filiment2 = filiment.translate [-15, 0 ,0]
+  
+hotend = new Cylinder
+  r: 9
+  h: 6
+  center: [0, 0, 3]
+
+hotend1 = hotend.translate [15, 0, 0]
+hotend2 = hotend.translate [-15, 0, 0]
+
+  
+nuttrap_hex = new Cylinder
+  h: base_hotend_hex_height
+  r: base_hotend_hex_radius
+  center: [0, 0, base_Thickness - base_hotend_hex_height / 2]
+  $fn: 6 # This sets the number of sides to six.
+  
+nuttrap_shaft = new Cylinder
+  h: base_Thickness
+  r: base_hotend_shaft_radius
+  center: [0, 0, base_Thickness / 2]
+nuttrap = nuttrap_shaft.union(nuttrap_hex.translate [0, 0, 2])
+nuttrap1 = nuttrap.translate [15, 25, 0]
+nuttrap2 = nuttrap.translate [-15, 25, 0]
+nuttrap3 = nuttrap.translate [15, -25, 0]
+nuttrap4 = nuttrap.translate [-15, -25, 0]
+  
+base_sub = hotend1.union([hotend2, filiment1, filiment2, nuttrap1, nuttrap2, nuttrap3, nuttrap4])
+#motor_sub =
+#hbolt_ret1_sub = 
+
+shape = base.union([motorMount, hBoltBerring_retention1, hBoltBerring_retention2])
+shape = shape.subtract([base_sub, hBoltberring1, hBoltberring2, motorMount_sub])
+shape = shape.union([hBolt])
+return shape
